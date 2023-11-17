@@ -2,6 +2,11 @@
 
 A new Flutter project.
 
+## Project setup
+- Rename ```config_example.dart``` in the config folder to ```config.dart```
+- Replace the baseUrl value with the correct base url of the API
+- run the build runner generator ```flutter pub get && dart run build_runner build --delete-conflicting-outputs```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

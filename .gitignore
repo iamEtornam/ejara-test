@@ -45,4 +45,9 @@ app.*.map.json
 
 
 # ignore app files
-/lib/config.dart
+/lib/config/config.dart
+*.g.dart
+
+# "JSON to Dart Model" generator tracker files locations.
+/.json_models/
+models.jsonc
