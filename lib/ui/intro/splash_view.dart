@@ -35,6 +35,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('splash'),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
         child: Column(
@@ -58,6 +59,7 @@ class _SplashViewState extends State<SplashView> {
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(
+                      key: ValueKey('loading'),
                       color: Colors.white,
                       strokeWidth: 2,
                     )),

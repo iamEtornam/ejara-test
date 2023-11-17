@@ -15,6 +15,7 @@ class _AddPaymentMethodViewState extends State<AddPaymentMethodView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('add-payment-screen'),
       appBar: AppBar(
         leading: Center(
           child: InkWell(
@@ -140,6 +141,7 @@ class _AddPaymentMethodViewState extends State<AddPaymentMethodView> {
             child: IgnorePointer(
               ignoring: true,
               child: EjaraTextField(
+                key: const ValueKey('mobile-operator'),
                 placeholderText: operator ?? 'Select operator',
                 label: 'Choose the mobile operator',
                 suffixIcons: Icon(
@@ -153,6 +155,7 @@ class _AddPaymentMethodViewState extends State<AddPaymentMethodView> {
             height: 15,
           ),
           const EjaraTextField(
+            key: ValueKey('phone-number'),
             placeholderText: '6 96 6 000 654',
             label: 'Phone number',
           ),
@@ -160,6 +163,7 @@ class _AddPaymentMethodViewState extends State<AddPaymentMethodView> {
             height: 15,
           ),
           const EjaraTextField(
+            key: ValueKey('full-name'),
             placeholderText: 'King',
             label: 'Full name',
           ),
