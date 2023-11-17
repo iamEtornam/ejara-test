@@ -25,7 +25,7 @@ class _SplashViewState extends State<SplashView> {
     () async {
       final success =
           await authProvider.login(Config.username, Config.password);
-      final user = await LocalStorage.getUser();
+      final user = await LocalStorage().getUser();
       if (!mounted) return;
       if (success) {
         context.goNamed(RoutesName.paymentRoute.name, extra: user);

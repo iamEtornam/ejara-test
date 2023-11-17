@@ -18,40 +18,40 @@ class LocalStorage {
     return _instance;
   }
 
-  static Future<void> saveToken(String value) async {
+  Future<void> saveToken(String value) async {
     await storage.write(key: 'token', value: value);
   }
 
-  static Future<void> saveRefreshToken(String value) async {
+  Future<void> saveRefreshToken(String value) async {
     await storage.write(key: 'refresh_token', value: value);
   }
 
-  static Future<String?> readAccessToken() async {
+  Future<String?> readAccessToken() async {
     return await storage.read(key: 'token');
   }
 
-  static Future<String?> readRefreshToken() async {
+  Future<String?> readRefreshToken() async {
     return await storage.read(key: 'refresh_token');
   }
 
-  static Future<void> deleteToken() async {
+  Future<void> deleteToken() async {
     await storage.delete(key: 'token');
   }
 
-  static Future<void> deleteRefreshToken() async {
+  Future<void> deleteRefreshToken() async {
     await storage.delete(key: 'refresh_token');
   }
 
-  static Future<void> deleteAll() async {
+  Future<void> deleteAll() async {
     await storage.deleteAll();
   }
 
-  static Future<bool> saveUser(User user) async {
+  Future<bool> saveUser(User user) async {
     final sharedPreference = await SharedPreferences.getInstance();
     return await sharedPreference.setString('user', json.encode(user.toJson()));
   }
 
-  static Future<User?> getUser() async {
+  Future<User?> getUser() async {
     final sharedPreference = await SharedPreferences.getInstance();
     final data = sharedPreference.getString('user');
     return data == null ? null : User.fromJson(json.decode(data));

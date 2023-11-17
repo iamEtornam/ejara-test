@@ -33,7 +33,7 @@ class RestClientImpl implements RestClient {
   final dio = Dio();
 
   Future<Map<String, String>> _getHeaders() async {
-    final token = await LocalStorage.readAccessToken();
+    final token = await LocalStorage().readAccessToken();
     debugPrint('token: $token');
 
     Map<String, String> headers;

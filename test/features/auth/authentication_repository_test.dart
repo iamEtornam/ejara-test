@@ -1,3 +1,4 @@
+import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/features/repositories/authentication_repository.dart';
 import 'package:ejara_assignment/services/rest_client.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,8 +18,8 @@ void main() {
   test('user login test', () async {
     final authenticationRepository = AuthenticationRepositoryImpl();
 
-    when(() => restClient
-            .post('', body: {'username': 'username', 'password': 'password'}))
+    when(() => restClient.post('${Config.baseUrl}/auth/login',
+            body: {'log': 'username', 'password': 'password'}))
         .thenAnswer((_) => Future.value({
               "responsecode": "login_ok",
               "message": "Login successful",
@@ -26,6 +27,7 @@ void main() {
 
     final result = await authenticationRepository.login('username', 'password');
 
-    expect(result, true);
+    expect(result!.isNotEmpty, true);
+    expect(result, isA<Map<String, dynamic>>());
   });
 }
