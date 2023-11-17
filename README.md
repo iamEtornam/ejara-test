@@ -7,8 +7,13 @@ A new Flutter project.
 - Replace the baseUrl value with the correct base url of the API and other configuration fields
 - run the build runner generator ```flutter pub get && dart run build_runner build --delete-conflicting-outputs```
 
-## Screenshots
-   
+## Run tests with coverage
+- install `lcov` by run ```brew install lcov```
+- To run test, run this command ```flutter test --coverage```
+- Run tests, generate coverage files and convert to HTML ```genhtml coverage/lcov.info -o coverage/html```
+- Open coverage report in browser ```open coverage/html/index.html```
+
+## Screenshots 
 <tr>
     <td><img align="left" src="https://github.com/iamEtornam/ejara-test/blob/main/screenshots/art_1.png?raw=true" width="200" height="400"/></td>
     <td><img src="https://github.com/iamEtornam/ejara-test/blob/main/screenshots/art_2.png?raw=true" width="200" height="400"/></td> 
