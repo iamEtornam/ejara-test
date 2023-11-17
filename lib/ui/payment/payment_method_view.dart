@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:ejara_assignment/features/models/payment/payment_type.dart';
 import 'package:ejara_assignment/features/models/user/user.dart';
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
@@ -37,6 +38,7 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
         NumberFormat.simpleCurrency(decimalDigits: 2, name: currency)
             .format(dailyLimitValue);
     return Scaffold(
+      key: const ValueKey('payment-screen'),
       appBar: AppBar(
         leading: Center(
           child: InkWell(
@@ -191,9 +193,20 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
                       itemBuilder: (context, index) {
                         final method = paymentMethod[index];
                         return PaymentMethodListTile(
+                          key: ValueKey('payment-methods-$index'),
                           onPressed: () async {
+                            BotToast.showLoading(
+                                allowClick: false,
+                                clickClose: false,
+                                backButtonBehavior: BackButtonBehavior.ignore);
+                            final paymentSettings = await paymentProvider
+                                .getPaymentSettings(method.id!);
+                            BotToast.closeAllLoading();
+                            if (!mounted) return;
                             final res = await displayBottomSheet(context,
-                                method: method);
+                                methods: paymentSettings['data'] ?? [],
+                                methodName:
+                                    method.titleEn ?? method.titleFr ?? '');
                             if (res == null) return;
                             if (res == PaymentMethodOption.add && mounted) {
                               context.pushNamed(RoutesName.addMethodRoute.name);
@@ -218,7 +231,7 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
   }
 
   Future<PaymentMethodOption?> displayBottomSheet(BuildContext context,
-      {required Data method}) async {
+      {required List methods, required String methodName}) async {
     return showModalBottomSheet<PaymentMethodOption?>(
         context: context,
         isScrollControlled: true,
@@ -237,7 +250,7 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
                         width: 45,
                       ),
                       Text(
-                        'Select the ${method.titleEn} method',
+                        'Select the $methodName method',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
@@ -250,23 +263,40 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
                   ),
                   const Divider(),
                   const SizedBox(height: 25),
-                  MethodListTile(
-                      groupValue: groupValue,
-                      number: '9 96 000 000',
-                      title: 'Orange Money',
-                      onChanged: (p0) => innerState(() => groupValue = p0)),
-                  const SizedBox(height: 15),
-                  MethodListTile(
-                      groupValue: groupValue,
-                      number: '9 96 000 043',
-                      title: 'Orange Money',
-                      onChanged: (p0) => innerState(() => groupValue = p0)),
-                  const SizedBox(height: 15),
-                  MethodListTile(
-                      groupValue: groupValue,
-                      number: '9 96 000 654',
-                      title: 'MTN Mobile Money',
-                      onChanged: (p0) => innerState(() => groupValue = p0)),
+                  methods.isEmpty
+                      ? Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('No $methodName methods available',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          color: Colors.grey))
+                            ],
+                          ),
+                      )
+                      : Column(
+                          children: List.generate(
+                              methods.length,
+                              (index) => Column(
+                                    children: [
+                                      MethodListTile(
+                                          key: ValueKey(
+                                              'payment-method-${methods[index]['id']}'),
+                                          groupValue: groupValue,
+                                          number: '9 96 000 000',
+                                          title: 'Orange Money',
+                                          onChanged: (p0) => innerState(
+                                              () => groupValue = p0)),
+                                      const SizedBox(height: 15),
+                                    ],
+                                  )),
+                        ),
                   const SizedBox(height: 25),
                   Row(
                     children: [
@@ -293,6 +323,7 @@ class _PaymentMethodViewState extends State<PaymentMethodView> {
                   ),
                   const SizedBox(height: 35),
                   TextButton(
+                      key: const ValueKey('add-payment-method'),
                       style: TextButton.styleFrom(
                           padding: const EdgeInsets.all(10),
                           shape: RoundedRectangleBorder(

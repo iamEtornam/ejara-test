@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:ejara_assignment/features/providers/authentication_provider.dart';
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
 import 'package:ejara_assignment/router.dart';
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: Config.appName,
+        builder: BotToastInit(),
         routeInformationParser: router.routeInformationParser,
         routerDelegate: router.routerDelegate,
         routeInformationProvider: router.routeInformationProvider,

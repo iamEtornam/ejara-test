@@ -12,7 +12,7 @@ class PaymentProvider with ChangeNotifier {
     return PaymentType.fromJson(result);
   }
 
-  Future getPaymentSettings(int paymentTypeId) async {
+  Future<Map<String, dynamic>> getPaymentSettings(int paymentTypeId) async {
     final result = await paymentRepository.getPaymentSettings(paymentTypeId);
     return result;
   }
