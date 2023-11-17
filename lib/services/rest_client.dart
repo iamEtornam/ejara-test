@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/util/local_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -29,11 +30,7 @@ class RestClientImpl implements RestClient {
     return _instance;
   }
 
-  final dio = Dio(BaseOptions(
-      baseUrl: 'https://testbox-nellys-coin.ejaraapis.xyz/api',
-      headers: {
-        "Accept": "application/json",
-      }));
+  final dio = Dio();
 
   Future<Map<String, String>> _getHeaders() async {
     final token = await LocalStorage.readAccessToken();
@@ -43,13 +40,24 @@ class RestClientImpl implements RestClient {
     if (token == null || token.isEmpty) {
       headers = {
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'client-id': Config.clientId,
+        'app-version': Config.appVersion,
+        'app-platform': Config.appPlatform,
+        'client': Config.client,
+        'api-key': Config.apiKey,
       };
     } else {
       headers = {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": "Bearer $token"
+        "Authorization": "Bearer $token",
+        'client-id': Config.clientId,
+        'app-version': Config.appVersion,
+        'app-platform': Config.appPlatform,
+        'client': Config.client,
+        'api-key': Config.apiKey,
+        "Accept-language": "en",
       };
     }
     return headers;
@@ -64,6 +72,8 @@ class RestClientImpl implements RestClient {
       queryParameters: queryParams,
       options: Options(headers: await _getHeaders()),
     );
+    dio.interceptors.add(LogInterceptor());
+
     if (response.statusCode == 200) {
       return response.data as T;
     }
@@ -81,6 +91,8 @@ class RestClientImpl implements RestClient {
       queryParameters: queryParams,
       options: Options(headers: await _getHeaders()),
     );
+    dio.interceptors.add(LogInterceptor());
+
     if (response.statusCode == 200) {
       return response.data as T;
     }

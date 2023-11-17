@@ -1,3 +1,4 @@
+import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/services/injection_container.dart';
 import 'package:ejara_assignment/services/rest_client.dart';
 
@@ -11,7 +12,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<Map<String, dynamic>> getPaymentMethods() async {
-    const path = 'v2/marketplace/payment-types-per-country';
+    const path = '${Config.baseUrl2}/marketplace/payment-types-per-country';
     final queryParams = <String, dynamic>{
       'countryCode': 'CM',
       'transactionType': 'buy'
@@ -25,7 +26,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<Map<String, dynamic>> getPaymentSettings(int paymentTypeId) async {
-    const path = 'v1/customer/payment-settings-per-type';
+    const path = '${Config.baseUrl}/customer/payment-settings-per-type';
     final queryParams = <String, dynamic>{
       'countryCode': 'CM',
       'transactionType': 'buy',

@@ -1,7 +1,9 @@
+import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/features/models/user/user.dart';
 import 'package:ejara_assignment/services/injection_container.dart';
 import 'package:ejara_assignment/services/rest_client.dart';
 import 'package:ejara_assignment/util/local_storage.dart';
+import 'package:flutter/material.dart';
 
 abstract class AuthenticationRepository {
   Future<bool> login(String username, String password);
@@ -12,7 +14,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<bool> login(String username, String password) async {
-    const path = 'v1/auth/login';
+    const path = '${Config.baseUrl}/auth/login';
     final body = {
       'log': username,
       'password': password,
@@ -27,6 +29,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       ]);
       return response.isNotEmpty;
     } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }
