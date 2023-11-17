@@ -2,8 +2,10 @@ import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/features/models/payment/payment_type.dart';
 import 'package:ejara_assignment/features/providers/authentication_provider.dart';
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
+import 'package:ejara_assignment/features/repositories/authentication_repository.dart';
+import 'package:ejara_assignment/features/repositories/payment_repository.dart';
 import 'package:ejara_assignment/router.dart';
-import 'package:ejara_assignment/services/injection_container.dart' as inject;
+import 'package:ejara_assignment/services/rest_client.dart';
 import 'package:ejara_assignment/util/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,18 +17,39 @@ import '../test/helper/core_mock.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  inject.initFeatures();
 
   late AuthenticationProvider authProvider;
   late PaymentProvider paymentProvider;
   late LocalStorage localStorage;
+  late RestClient restClient;
+  late PaymentRepository paymentRepository;
+  late AuthenticationRepository authenticationRepository;
 
-  setUp(() {
+  setUpAll(() {
+    getIt.registerLazySingleton<LocalStorage>(() => LocalStorage());
+
+    final rs = MockRestClient();
+    restClient = getIt.registerSingleton<RestClient>(rs);
+
     localStorage = MockLocalStorage();
-    final mockAuthRepo = MockAuthenticationRepository();
-    authProvider = AuthenticationProvider(mockAuthRepo, localStorage);
-    final mockPaymentRepo = MockPaymentRepository();
-    paymentProvider = PaymentProvider(mockPaymentRepo);
+
+    final mockAuthRepo = MockAuthenticationRepository(restClient);
+    authenticationRepository =
+        getIt.registerSingleton<AuthenticationRepository>(mockAuthRepo);
+
+    final mockPaymentRepo = MockPaymentRepository(restClient);
+    paymentRepository =
+        getIt.registerSingleton<PaymentRepository>(mockPaymentRepo);
+
+    authProvider =
+        AuthenticationProvider(authenticationRepository, localStorage);
+
+    paymentProvider = PaymentProvider(paymentRepository);
+  });
+
+  tearDown(() {
+    getIt.reset();
+    resetMocktailState();
   });
 
   Widget rootWidget() {
@@ -52,43 +75,43 @@ void main() {
   testWidgets('tap on the payment methods should show bottom sheet',
       (tester) async {
     when(() => authProvider.login('username', 'password'))
-        .thenReturn(Future.value(true));
+        .thenAnswer((_) => Future.value(true));
     when(() => paymentProvider.getPaymentMethods())
-        .thenReturn(Future.value(PaymentType.fromJson({
-      "responseCode": "get_payment_types_per_country_ok",
-      "message": "2 payment type(s) found",
-      "data": [
-        {
-          "id": 1,
-          "code": "MOMO",
-          "title_en": "Mobile Money",
-          "title_fr": "Mobile Money",
-          "description_en": "Instantly - 3.1% Telco Fees",
-          "min_amount": 0,
-          "description_fr": "Instantanément - 3.1% de frais",
-          "icon_image": ""
-        },
-        {
-          "id": 2,
-          "code": "BAC",
-          "title_en": "Bank",
-          "title_fr": "Banque",
-          "description_en": "1 business Day",
-          "min_amount": 0,
-          "description_fr": "1 jour ouvrable",
-          "icon_image": ""
-        }
-      ]
-    })));
+        .thenAnswer((_) => Future.value(PaymentType.fromJson({
+              "responseCode": "get_payment_types_per_country_ok",
+              "message": "2 payment type(s) found",
+              "data": [
+                {
+                  "id": 1,
+                  "code": "MOMO",
+                  "title_en": "Mobile Money",
+                  "title_fr": "Mobile Money",
+                  "description_en": "Instantly - 3.1% Telco Fees",
+                  "min_amount": 0,
+                  "description_fr": "Instantanément - 3.1% de frais",
+                  "icon_image": ""
+                },
+                {
+                  "id": 2,
+                  "code": "BAC",
+                  "title_en": "Bank",
+                  "title_fr": "Banque",
+                  "description_en": "1 business Day",
+                  "min_amount": 0,
+                  "description_fr": "1 jour ouvrable",
+                  "icon_image": ""
+                }
+              ]
+            })));
 
     const paymentTypeId = 1;
 
     when(() => paymentProvider.getPaymentSettings(paymentTypeId))
-        .thenReturn(Future.value({
-      "responseCode": "payment_settings_per_type_ok",
-      "message": "get payment settings per type successful",
-      "data": []
-    }));
+        .thenAnswer((_) => Future.value({
+              "responseCode": "payment_settings_per_type_ok",
+              "message": "get payment settings per type successful",
+              "data": []
+            }));
 
     // Load app widget.
     await tester.pumpWidget(rootWidget());
@@ -121,10 +144,8 @@ void main() {
     expectSync(operatorTextField, findsOneWidget);
     await tester.enterText(operatorTextField, 'MTN');
 
-    await tester.pump(const Duration(seconds: 3));
-
     final phonenumberTextField = find.byKey(const Key('phone-number'));
-    expectSync(phonenumberTextField, findsOneWidget);
+    expect(phonenumberTextField, findsOneWidget);
     await tester.enterText(phonenumberTextField, '9 96 000 043');
 
     await tester.pump(const Duration(seconds: 3));
