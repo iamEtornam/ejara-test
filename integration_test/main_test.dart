@@ -4,6 +4,7 @@ import 'package:ejara_assignment/features/providers/authentication_provider.dart
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
 import 'package:ejara_assignment/router.dart';
 import 'package:ejara_assignment/services/injection_container.dart' as inject;
+import 'package:ejara_assignment/util/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -18,10 +19,12 @@ void main() {
 
   late AuthenticationProvider authProvider;
   late PaymentProvider paymentProvider;
+  late LocalStorage localStorage;
 
   setUp(() {
+    localStorage = MockLocalStorage();
     final mockAuthRepo = MockAuthenticationRepository();
-    authProvider = AuthenticationProvider(mockAuthRepo);
+    authProvider = AuthenticationProvider(mockAuthRepo, localStorage);
     final mockPaymentRepo = MockPaymentRepository();
     paymentProvider = PaymentProvider(mockPaymentRepo);
   });
