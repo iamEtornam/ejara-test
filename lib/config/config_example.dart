@@ -6,4 +6,6 @@ class Config {
   static const String appVersion = '<APP VERSION HERE>';
   static const String appPlatform = '<APP PLATFORM HERE>';
   static const String client = '<CLIENT HERE>';
+  static const String username = '<USERNAME HERE>';
+  static const String password = '<PASSWORD HERE>';
 }

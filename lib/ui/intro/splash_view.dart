@@ -1,3 +1,4 @@
+import 'package:ejara_assignment/config/config.dart';
 import 'package:ejara_assignment/extensions/extension.dart';
 import 'package:ejara_assignment/features/providers/authentication_provider.dart';
 import 'package:ejara_assignment/router.dart';
@@ -23,7 +24,7 @@ class _SplashViewState extends State<SplashView> {
 
     () async {
       final success =
-          await authProvider.login('ejaraTests', 'CmKVGexi%REJjn!u65BI7PlR5');
+          await authProvider.login(Config.username, Config.password);
       final user = await LocalStorage.getUser();
       if (!mounted) return;
       if (success) {
