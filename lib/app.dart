@@ -2,11 +2,11 @@ import 'package:ejara_assignment/features/providers/authentication_provider.dart
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
 import 'package:ejara_assignment/router.dart';
 import 'package:ejara_assignment/services/injection_container.dart';
+import 'package:ejara_assignment/widgets/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'config/config.dart';
-import 'util/color_schemes.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -28,8 +28,7 @@ class App extends StatelessWidget {
         routerDelegate: router.routerDelegate,
         routeInformationProvider: router.routeInformationProvider,
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
-        darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+        theme: customLightTheme(context),
       ),
     );
   }
