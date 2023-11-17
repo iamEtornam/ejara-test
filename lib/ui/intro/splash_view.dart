@@ -1,6 +1,7 @@
 import 'package:ejara_assignment/extensions/extension.dart';
 import 'package:ejara_assignment/features/providers/authentication_provider.dart';
 import 'package:ejara_assignment/router.dart';
+import 'package:ejara_assignment/util/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +17,17 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
+
     final authProvider =
         Provider.of<AuthenticationProvider>(context, listen: false);
+
     () async {
-      final success = await authProvider.login('ejaraTests', 'CmKVGexi%REJjn!u65BI7PlR5');
+      final success =
+          await authProvider.login('ejaraTests', 'CmKVGexi%REJjn!u65BI7PlR5');
+      final user = await LocalStorage.getUser();
       if (!mounted) return;
       if (success) {
-        context.goNamed(RoutesName.paymentRoute.name);
+        context.goNamed(RoutesName.paymentRoute.name, extra: user);
       }
     }.withPostFrameCallback();
   }
