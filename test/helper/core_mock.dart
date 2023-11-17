@@ -7,12 +7,19 @@ import 'package:mocktail/mocktail.dart';
 
 GetIt getIt = GetIt.instance;
 
-class MockRestClient extends Mock implements RestClient {
+class MockRestClient extends Mock implements RestClient {}
+
+class MockPaymentRepository extends Mock implements PaymentRepository {
+  final RestClient restClient;
+
+  MockPaymentRepository(this.restClient);
 }
 
-class MockPaymentRepository extends Mock implements PaymentRepository {}
+class MockAuthenticationRepository extends Mock
+    implements AuthenticationRepository {
+  final RestClient restClient;
 
-class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
+  MockAuthenticationRepository(this.restClient);
+}
 
-class MockLocalStorage extends Mock
-    implements LocalStorage {}
+class MockLocalStorage extends Mock implements LocalStorage {}

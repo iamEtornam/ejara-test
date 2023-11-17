@@ -10,13 +10,13 @@ void main() {
   late RestClient restClient;
 
   setUpAll(() {
-    restClient = MockRestClient();
+    final rs = MockRestClient();
 
-    getIt.registerSingleton<RestClient>(restClient);
+    restClient = getIt.registerSingleton<RestClient>(rs);
   });
 
   test('user login test', () async {
-    final authenticationRepository = AuthenticationRepositoryImpl();
+    final authenticationRepository = AuthenticationRepositoryImpl(restClient);
 
     when(() => restClient.post('${Config.baseUrl}/auth/login',
             body: {'log': 'username', 'password': 'password'}))

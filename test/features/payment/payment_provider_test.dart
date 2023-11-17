@@ -1,13 +1,26 @@
 import 'package:ejara_assignment/features/models/payment/payment_type.dart';
 import 'package:ejara_assignment/features/providers/payment_provider.dart';
+import 'package:ejara_assignment/services/rest_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../helper/core_mock.dart';
 
 void main() {
+  late RestClient restClient;
+
+  setUpAll(() {
+    final rs = MockRestClient();
+    restClient = getIt.registerSingleton<RestClient>(rs);
+  });
+
+  tearDown(() {
+    getIt.reset();
+    resetMocktailState();
+  });
+
   test('get payment method should work', () async {
-    final mockRepo = MockPaymentRepository();
+    final mockRepo = MockPaymentRepository(restClient);
     final paymentProvider = PaymentProvider(mockRepo);
 
     when(() => mockRepo.getPaymentMethods()).thenAnswer((_) => Future.value({
@@ -45,7 +58,7 @@ void main() {
   });
 
   test('get payment settings should work', () async {
-    final mockRepo = MockPaymentRepository();
+    final mockRepo = MockPaymentRepository(restClient);
     final authProvider = PaymentProvider(mockRepo);
     const paymentTypeId = 1;
 

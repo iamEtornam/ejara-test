@@ -14,11 +14,11 @@ class AuthenticationProvider with ChangeNotifier {
     if (res != null) {
       final user = User.fromJson(res);
       if (user.token != null) {
-        await Future.wait([
-          localStorage.saveToken(user.token!),
-          localStorage.saveRefreshToken(user.refreshToken!),
-          localStorage.saveUser(user),
-        ]);
+        // await Future.wait([
+        //   localStorage.saveToken(user.token!),
+        //   localStorage.saveRefreshToken(user.refreshToken!),
+        //   localStorage.saveUser(user),
+        // ]);
       }
 
       return res.isNotEmpty;

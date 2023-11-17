@@ -7,24 +7,23 @@ import 'package:mocktail/mocktail.dart';
 import '../../helper/core_mock.dart';
 
 void main() {
-  late RestClient? restClient;
+  late RestClient restClient;
 
   setUpAll(() {
-    restClient = MockRestClient();
-    getIt.registerSingleton<RestClient>(restClient!);
+    final rs = MockRestClient();
+    restClient = getIt.registerSingleton<RestClient>(rs);
   });
 
   tearDown(() {
-    restClient = null;
     getIt.reset();
     resetMocktailState();
   });
 
   test('fetch all payment method test', () async {
-    final paymentRepository = PaymentRepositoryImpl();
+    final paymentRepository = PaymentRepositoryImpl(restClient);
 
     when(
-        () => restClient!.get(
+        () => restClient.get(
                 '${Config.baseUrl2}/marketplace/payment-types-per-country',
                 queryParams: {
                   'countryCode': 'CM',

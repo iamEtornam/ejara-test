@@ -1,5 +1,4 @@
 import 'package:ejara_assignment/config/config.dart';
-import 'package:ejara_assignment/services/injection_container.dart';
 import 'package:ejara_assignment/services/rest_client.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,9 @@ abstract class AuthenticationRepository {
 }
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  RestClient get _restClient => getIt<RestClient>();
+  final RestClient restClient;
+
+  AuthenticationRepositoryImpl(this.restClient);
 
   @override
   Future<Map<String, dynamic>?> login(String username, String password) async {
@@ -18,7 +19,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       'password': password,
     };
     try {
-      final response = await _restClient.post(path, body: body);
+      final response = await restClient.post(path, body: body);
 
       return response;
     } catch (e) {

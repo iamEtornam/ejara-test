@@ -13,12 +13,12 @@ void initFeatures() {
 
   /// Authentication feature
   getIt.registerLazySingleton<AuthenticationRepository>(
-      () => AuthenticationRepositoryImpl());
+      () => AuthenticationRepositoryImpl(getIt.get()));
   getIt.registerLazySingleton<AuthenticationProvider>(
       () => AuthenticationProvider(getIt.get(), getIt.get()));
 
   /// Payment feature
-  getIt.registerLazySingleton<PaymentRepository>(() => PaymentRepositoryImpl());
+  getIt.registerLazySingleton<PaymentRepository>(() => PaymentRepositoryImpl(getIt.get()));
   getIt.registerLazySingleton<PaymentProvider>(
       () => PaymentProvider(getIt.get()));
 

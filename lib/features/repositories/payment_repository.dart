@@ -1,5 +1,4 @@
 import 'package:ejara_assignment/config/config.dart';
-import 'package:ejara_assignment/services/injection_container.dart';
 import 'package:ejara_assignment/services/rest_client.dart';
 
 abstract class PaymentRepository {
@@ -8,7 +7,9 @@ abstract class PaymentRepository {
 }
 
 class PaymentRepositoryImpl implements PaymentRepository {
-  RestClient get _restClient => getIt<RestClient>();
+  final RestClient restClient;
+
+  PaymentRepositoryImpl(this.restClient);
 
   @override
   Future<Map<String, dynamic>> getPaymentMethods() async {
@@ -18,7 +19,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
       'transactionType': 'buy'
     };
     try {
-      return await _restClient.get(path, queryParams: queryParams);
+      return await restClient.get(path, queryParams: queryParams);
     } catch (e) {
       rethrow;
     }
@@ -34,7 +35,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     };
 
     try {
-      return await _restClient.get(path, queryParams: queryParams);
+      return await restClient.get(path, queryParams: queryParams);
     } catch (e) {
       rethrow;
     }
