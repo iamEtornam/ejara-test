@@ -25,7 +25,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       Future.wait([
         LocalStorage.saveToken(user.token!),
         LocalStorage.saveRefreshToken(user.refreshToken!),
-        LocalStorage.user(user),
+        LocalStorage.saveUser(user),
       ]);
       return response.isNotEmpty;
     } catch (e) {

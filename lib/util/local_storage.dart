@@ -46,8 +46,14 @@ class LocalStorage {
     await storage.deleteAll();
   }
 
-  static Future<bool> user(User user) async {
+  static Future<bool> saveUser(User user) async {
     final sharedPreference = await SharedPreferences.getInstance();
     return await sharedPreference.setString('user', json.encode(user.toJson()));
+  }
+
+  static Future<User?> getUser() async {
+    final sharedPreference = await SharedPreferences.getInstance();
+    final data = sharedPreference.getString('user');
+    return data == null ? null : User.fromJson(json.decode(data));
   }
 }
